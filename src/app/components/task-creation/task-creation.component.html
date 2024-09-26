@@ -1,0 +1,46 @@
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <h2>Crear Nueva Tarea</h2>
+
+  <label for="taskName">Nombre de la tarea:</label>
+  <input id="taskName" formControlName="name" type="text" />
+  <div *ngIf="taskForm.get('name')?.invalid && taskForm.get('name')?.touched">
+    El nombre de la tarea es obligatorio y debe tener al menos 5 caracteres.
+  </div>
+
+  <label for="deadline">Fecha límite:</label>
+  <input id="deadline" formControlName="deadline" type="date" />
+  <div *ngIf="taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched">
+    La fecha límite es obligatoria.
+  </div>
+
+  <h3>Personas Asociadas</h3>
+  <div formArrayName="persons">
+    <div *ngFor="let person of persons.controls; let i = index" [formGroupName]="i">
+      <label for="fullName">Nombre completo:</label>
+      <input id="fullName" formControlName="fullName" type="text" />
+      <div *ngIf="person.get('fullName')?.invalid && person.get('fullName')?.touched">
+        El nombre completo es obligatorio y debe tener al menos 5 caracteres.
+      </div>
+
+      <label for="age">Edad:</label>
+      <input id="age" formControlName="age" type="number" />
+      <div *ngIf="person.get('age')?.invalid && person.get('age')?.touched">
+        La edad debe ser al menos 18.
+      </div>
+
+      <h4>Habilidades</h4>
+      <div formArrayName="skills">
+        <div *ngFor="let skill of getSkills(person).controls; let j = index">
+          <input [formControlName]="j" type="text" placeholder="Habilidad" />
+          <button type="button" (click)="removeSkill(i, j)">Eliminar Habilidad</button>
+        </div>
+      </div>
+      <button type="button" (click)="addSkill(i)">Añadir Habilidad</button>
+
+      <button type="button" (click)="removePerson(i)">Eliminar Persona</button>
+    </div>
+  </div>
+
+  <button type="button" (click)="addPerson()">Añadir Persona</button>
+  <button type="submit" [disabled]="taskForm.invalid">Guardar Tarea</button>
+</form>

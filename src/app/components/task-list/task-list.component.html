@@ -1,0 +1,25 @@
+<h2>Lista de Tareas</h2>
+<div>
+  <button (click)="setFilter('all')">Todas</button>
+  <button (click)="setFilter('completed')">Completadas</button>
+  <button (click)="setFilter('pending')">Pendientes</button>
+</div>
+<ul>
+  <li *ngFor="let task of filteredTasks">
+    <label>
+      <input type="checkbox" [checked]="task.completed" (change)="toggleTaskCompletion(task.id)" />
+      {{ task.name }} - {{ task.deadline | date }}
+    </label>
+    <div *ngIf="task.persons.length > 0">
+      Personas Asociadas:
+      <ul>
+        <li *ngFor="let person of task.persons">
+          {{ person.fullName }} ({{ person.age }})
+          <div *ngIf="person.skills.length > 0">
+            Habilidades: {{ person.skills.join(', ') }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </li>
+</ul>
