@@ -49,6 +49,11 @@
     └── tsconfig.spec.json
 ```
 
+## Requisitos del Entorno
+
+1. Angular CLI: 16.2.16
+2. Node: 18.17.0
+
 ## Instalación
 
 1. Clona este repositorio en tu máquina local:
