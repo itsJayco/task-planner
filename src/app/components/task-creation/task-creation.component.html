@@ -165,7 +165,7 @@
             taskForm.invalid || (showAddPerson && addedPersons.length === 0)
           "
         >
-          Save
+          {{ isEditing ? "Update" : "Save" }}
         </button>
       </div>
     </form>

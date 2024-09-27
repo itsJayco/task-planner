@@ -29,8 +29,8 @@ export class TaskCreationComponent implements OnInit {
     'DEFINE YOUR NEXT STEP',
     'PLAN. ACT. ACHIEVE.',
   ];
-
   selectedPhrase: string = '';
+  isEditing: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -44,15 +44,16 @@ export class TaskCreationComponent implements OnInit {
     });
 
     this.personForm = this.fb.group({
-      fullName: ['', []],
-      age: ['', []],
-      skills: this.fb.array([this.fb.control('')]),
+      fullName: ['', [Validators.required, Validators.minLength(5)]],
+      age: ['', [Validators.required, Validators.min(18)]],
+      skills: this.fb.array([this.fb.control('', [Validators.required])]),
     });
   }
 
   ngOnInit(): void {
     this.getRandomPhrase();
     if (this.data) {
+      this.isEditing = true;
       this.taskForm.patchValue({
         name: this.data.name,
         deadline: this.data.deadline,
@@ -100,6 +101,13 @@ export class TaskCreationComponent implements OnInit {
       };
       this.addedPersons.push(newPerson);
       this.personForm.reset();
+      this.personForm.markAsPristine();
+      this.personForm.markAsUntouched();
+
+      this.personForm.get('fullName')?.setErrors(null);
+      this.personForm.get('age')?.setErrors(null);
+
+
       this.skills.clear();
       this.addSkill();
     }
@@ -163,8 +171,7 @@ export class TaskCreationComponent implements OnInit {
   isAddPersonDisabled(): boolean {
     return (
       this.personForm.invalid ||
-      this.skills.length === 0 ||
-      this.skills.controls.every((control) => !control.value)
+      this.skills.controls.every((control) => !control.value.trim())
     );
   }
 }
