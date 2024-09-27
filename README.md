@@ -1,27 +1,106 @@
-# TaskPlanner
+# Task Planner
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+## Descripción
 
-## Development server
+**Task Planner** es una aplicación web desarrollada con Angular para la planificación y gestión de tareas. Permite a los usuarios crear, visualizar y gestionar tareas en una lista interactiva.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Estructura del Proyecto
 
-## Code scaffolding
+```
+└── 📁task-planner
+    └── 📁src
+        └── 📁app
+            └── 📁components
+                └── 📁task-creation
+                    └── task-creation.component.html
+                    └── task-creation.component.scss
+                    └── task-creation.component.spec.ts
+                    └── task-creation.component.ts
+                └── 📁task-list
+                    └── task-list.component.html
+                    └── task-list.component.scss
+                    └── task-list.component.spec.ts
+                    └── task-list.component.ts
+            └── 📁services
+                └── task.service.spec.ts
+                └── task.service.ts
+            └── app-routing.module.ts
+            └── app.component.html
+            └── app.component.scss
+            └── app.component.spec.ts
+            └── app.component.ts
+            └── app.module.ts
+            └── material.module.ts
+        └── 📁assets
+            └── .gitkeep
+        └── favicon.ico
+        └── index.html
+        └── main.ts
+        └── styles.scss
+    └── .editorconfig
+    └── .gitignore
+    └── angular.json
+    └── db.json
+    └── package-lock.json
+    └── package.json
+    └── README.md
+    └── tsconfig.app.json
+    └── tsconfig.json
+    └── tsconfig.spec.json
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Instalación
 
-## Build
+1. Clona este repositorio en tu máquina local:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+   ```bash
+   git clone https://github.com/itsJayco/task-planner.git
+   ```
 
-## Running unit tests
+2. Ve a la carpeta del proyecto:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+   ```bash
+   cd task-planner
+   ```
 
-## Running end-to-end tests
+3. Instala las dependencias necesarias:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+   ```bash
+   npm install
+   ```
 
-## Further help
+## Ejecución
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Para iniciar la aplicación en modo de desarrollo, ejecuta el siguiente comando:
+
+```bash
+npm start
+```
+
+La aplicación estará disponible en http://localhost:4200/
+
+## Estructura de Componentes
+
+1. Task Creation Component: Permite al usuario crear una nueva tarea y añadirla a la lista de tareas.
+2. Task List Component: Muestra la lista de tareas creadas, con la opción de editar o eliminar cada una.
+
+## Servicios
+
+1. Task Service: Gestiona las operaciones CRUD (Crear, Leer, Actualizar, Eliminar) para las tareas. Se utiliza para interactuar con una base de datos simulada a través de JSON Server.
+
+## Tecnologías
+
+1. Angular: Framework principal para el desarrollo de la aplicación.
+2. Angular Material: Para el diseño de la interfaz de usuario.
+3. SCSS: Para el manejo de estilos.
+4. JSON Server: Simulador de API para desarrollo local.
+
+## Contribución
+
+Si deseas contribuir al proyecto, por favor sigue los siguientes pasos:
+
+1. Crea un fork del repositorio.
+2. Crea una nueva rama (git checkout -b feature/nueva-funcionalidad).
+3. Realiza los cambios y haz commit (git commit -am 'Añadir nueva funcionalidad').
+4. Empuja los cambios a la rama (git push origin feature/nueva-funcionalidad).
+5. Abre un Pull Request.
