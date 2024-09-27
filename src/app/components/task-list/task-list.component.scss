@@ -56,6 +56,14 @@
 .task-filter.active {
   background-color: #7996a5;
   color: #fff;
+
+  &:hover{
+    background-color: #7996a5;
+  }
+}
+
+.task-filter:hover{
+  background-color: #7996a547;
 }
 
 /* Task Input Form Styles */
