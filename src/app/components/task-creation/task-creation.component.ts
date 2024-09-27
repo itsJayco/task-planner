@@ -1,20 +1,33 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, AbstractControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormArray,
+  AbstractControl,
+} from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MaterialModule } from 'src/app/material.module';
 
 @Component({
   selector: 'app-task-creation',
   templateUrl: './task-creation.component.html',
   styleUrls: ['./task-creation.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [MaterialModule, CommonModule, ReactiveFormsModule],
 })
 export class TaskCreationComponent {
   taskForm: FormGroup;
+  showAddPerson: boolean = false;
 
-  constructor(private fb: FormBuilder, private taskService: TaskService) {
+  constructor(
+    private fb: FormBuilder,
+    private taskService: TaskService,
+    private dialogRef: MatDialogRef<TaskCreationComponent>
+  ) {
     this.taskForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       deadline: ['', Validators.required],
@@ -60,8 +73,22 @@ export class TaskCreationComponent {
         deadline: new Date(this.taskForm.value.deadline),
         persons: this.taskForm.value.persons,
       };
+
+      const timezoneOffset = newTask.deadline.getTimezoneOffset() * 60 * 1000;
+      newTask.deadline = new Date(newTask.deadline.getTime() + timezoneOffset);
+
       this.taskService.addTask(newTask);
       this.taskForm.reset();
+
+      this.onCloseDialog();
     }
+  }
+
+  onCloseDialog() {
+    this.dialogRef.close();
+  }
+
+  toggleAddPerson() {
+    this.showAddPerson = !this.showAddPerson
   }
 }

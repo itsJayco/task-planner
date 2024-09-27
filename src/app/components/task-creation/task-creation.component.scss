@@ -1,0 +1,51 @@
+.form-container {
+  width: 100%;
+  background-color: #fff;
+  font-family: var(--font);
+  font-size: 15px;
+  overflow: hidden;
+  color: #455963;
+  height: 100%;
+}
+
+.mat-dialog-content {
+  display: flex;
+  flex-direction: row;
+  padding: 0px;
+}
+
+.form {
+  width: 70%;
+  height: 100%;
+  padding: 20px;
+  min-height: 400px;
+}
+
+.invite {
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(-45deg, #f857a6, #ff5858);
+  background: #7996a5;
+  padding: 20px;
+  font-size: 30px;
+  color: #fff;
+  min-height: 400px;
+}
+
+.invite h3 {
+  font-size: 30px;
+  width: 45%;
+  line-height: 1.2em;
+  font-weight: bold;
+}
+
+.section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mat-datepicker-actions {
+  padding: 0px;
+}

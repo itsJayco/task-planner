@@ -1,46 +1,135 @@
-<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-  <h2>Crear Nueva Tarea</h2>
+<div class="form-container">
+  <div mat-dialog-content class="mat-dialog-content">
+    <form class="form" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+      <div class="section">
+        <mat-form-field appearance="outline">
+          <mat-label>Name Task</mat-label>
+          <input
+            matInput
+            placeholder="Enter a name..."
+            id="taskName"
+            formControlName="name"
+            type="text"
+          />
+          <mat-hint
+            *ngIf="
+              taskForm.get('name')?.invalid && taskForm.get('name')?.touched
+            "
+          >
+            Required (min 5 caracteres)
+          </mat-hint>
+        </mat-form-field>
 
-  <label for="taskName">Nombre de la tarea:</label>
-  <input id="taskName" formControlName="name" type="text" />
-  <div *ngIf="taskForm.get('name')?.invalid && taskForm.get('name')?.touched">
-    El nombre de la tarea es obligatorio y debe tener al menos 5 caracteres.
-  </div>
-
-  <label for="deadline">Fecha límite:</label>
-  <input id="deadline" formControlName="deadline" type="date" />
-  <div *ngIf="taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched">
-    La fecha límite es obligatoria.
-  </div>
-
-  <h3>Personas Asociadas</h3>
-  <div formArrayName="persons">
-    <div *ngFor="let person of persons.controls; let i = index" [formGroupName]="i">
-      <label for="fullName">Nombre completo:</label>
-      <input id="fullName" formControlName="fullName" type="text" />
-      <div *ngIf="person.get('fullName')?.invalid && person.get('fullName')?.touched">
-        El nombre completo es obligatorio y debe tener al menos 5 caracteres.
+        <mat-form-field class="example-form-field" appearance="outline">
+          <mat-label>Choose a date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="datepicker"
+            id="deadline"
+            formControlName="deadline"
+          />
+          <mat-hint *ngIf="taskForm.get('deadline')?.valid">
+            MM/DD/YYYY
+          </mat-hint>
+          <mat-hint
+            *ngIf="
+              taskForm.get('deadline')?.invalid &&
+              taskForm.get('deadline')?.touched
+            "
+            >Required
+          </mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="datepicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datepicker>
+            <mat-datepicker-actions>
+              <button mat-button matDatepickerCancel>Cancel</button>
+              <button mat-raised-button color="primary" matDatepickerApply>
+                Apply
+              </button>
+            </mat-datepicker-actions>
+          </mat-datepicker>
+        </mat-form-field>
       </div>
-
-      <label for="age">Edad:</label>
-      <input id="age" formControlName="age" type="number" />
-      <div *ngIf="person.get('age')?.invalid && person.get('age')?.touched">
-        La edad debe ser al menos 18.
+      <div class="section">
+        <mat-slide-toggle (click)="toggleAddPerson()">
+          Relate person
+        </mat-slide-toggle>
       </div>
-
-      <h4>Habilidades</h4>
-      <div formArrayName="skills">
-        <div *ngFor="let skill of getSkills(person).controls; let j = index">
-          <input [formControlName]="j" type="text" placeholder="Habilidad" />
-          <button type="button" (click)="removeSkill(i, j)">Eliminar Habilidad</button>
-        </div>
+      <div *ngIf="showAddPerson">
+        <div class="section"></div>
       </div>
-      <button type="button" (click)="addSkill(i)">Añadir Habilidad</button>
-
-      <button type="button" (click)="removePerson(i)">Eliminar Persona</button>
+      <div mat-dialog-actions class="mat-datepicker-actions">
+        <button mat-raised-button type="submit" [disabled]="taskForm.invalid">
+          Save
+        </button>
+      </div>
+    </form>
+    <div class="invite">
+      <h3>CREATE A NEW TASK</h3>
     </div>
   </div>
+</div>
 
-  <button type="button" (click)="addPerson()">Añadir Persona</button>
-  <button type="submit" [disabled]="taskForm.invalid">Guardar Tarea</button>
-</form>
+<!-- <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <h2>Crear Nueva Tarea</h2>
+
+    <label for="taskName">Nombre de la tarea:</label>
+    <input id="taskName" formControlName="name" type="text" />
+    <div *ngIf="taskForm.get('name')?.invalid && taskForm.get('name')?.touched">
+      El nombre de la tarea es obligatorio y debe tener al menos 5 caracteres.
+    </div>
+
+    <label for="deadline">Fecha límite:</label>
+    <input id="deadline" formControlName="deadline" type="date" />
+    <div
+      *ngIf="
+        taskForm.get('deadline')?.invalid && taskForm.get('deadline')?.touched
+      "
+    >
+      La fecha límite es obligatoria.
+    </div>
+
+    <h3>Personas Asociadas</h3>
+    <div formArrayName="persons">
+      <div
+        *ngFor="let person of persons.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <label for="fullName">Nombre completo:</label>
+        <input id="fullName" formControlName="fullName" type="text" />
+        <div
+          *ngIf="
+            person.get('fullName')?.invalid && person.get('fullName')?.touched
+          "
+        >
+          El nombre completo es obligatorio y debe tener al menos 5 caracteres.
+        </div>
+
+        <label for="age">Edad:</label>
+        <input id="age" formControlName="age" type="number" />
+        <div *ngIf="person.get('age')?.invalid && person.get('age')?.touched">
+          La edad debe ser al menos 18.
+        </div>
+
+        <h4>Habilidades</h4>
+        <div formArrayName="skills">
+          <div *ngFor="let skill of getSkills(person).controls; let j = index">
+            <input [formControlName]="j" type="text" placeholder="Habilidad" />
+            <button type="button" (click)="removeSkill(i, j)">
+              Eliminar Habilidad
+            </button>
+          </div>
+        </div>
+        <button type="button" (click)="addSkill(i)">Añadir Habilidad</button>
+
+        <button type="button" (click)="removePerson(i)">
+          Eliminar Persona
+        </button>
+      </div>
+    </div>
+
+    <button type="button" (click)="addPerson()">Añadir Persona</button>
+    <button type="submit" [disabled]="taskForm.invalid">Guardar Tarea</button>
+  </form> -->
