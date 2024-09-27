@@ -24,7 +24,7 @@ export class TaskListComponent implements OnInit {
     this.currentDate = this.getCurrentDate();
   }
 
-  toggleTaskCompletion(event: any, id: number): void {
+  toggleTaskCompletion(event: MouseEvent, id: number): void {
     event.stopPropagation();
     this.taskService.toggleTaskCompletion(id);
     this.applyFilter();
@@ -57,7 +57,8 @@ export class TaskListComponent implements OnInit {
       .replace(/,/g, '');
   }
 
-  deleteTask(taskId: number | undefined): void {
+  deleteTask(event: MouseEvent, taskId: number | undefined): void {
+    event.stopPropagation();
     if (taskId !== undefined) {
       this.taskService.deleteTask(taskId);
     } else {
@@ -70,6 +71,23 @@ export class TaskListComponent implements OnInit {
       width: '800px',
       height: '500px',
       panelClass: 'custom-dialog',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.taskService.getTasks().subscribe((tasks) => {
+        this.tasks = tasks;
+        this.applyFilter();
+      });
+    });
+  }
+
+  openTaskUpdateModal(event: MouseEvent, task: Task) {
+    event.stopPropagation();
+    const dialogRef = this.dialog.open(TaskCreationComponent, {
+      width: '800px',
+      height: '500px',
+      panelClass: 'custom-dialog',
+      data: task,
     });
 
     dialogRef.afterClosed().subscribe(() => {

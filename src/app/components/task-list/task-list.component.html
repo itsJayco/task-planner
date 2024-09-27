@@ -47,7 +47,7 @@
           class="mat-expansion-panel-header"
           [ngClass]="{ completed: task.completed }"
         >
-          <mat-panel-title>
+          <mat-panel-title class="mat-panel-title">
             <mat-checkbox
               [checked]="task.completed"
               *ngIf="task.id"
@@ -55,7 +55,18 @@
             ></mat-checkbox>
             {{ task.name }} - {{ task.deadline | date }}
           </mat-panel-title>
+          <div class="panel-actions">
+            <mat-icon
+              class="edit-icon"
+              (click)="openTaskUpdateModal($event, task)"
+              >edit</mat-icon
+            >
+            <mat-icon class="delete-icon" (click)="deleteTask($event, task.id)"
+              >delete</mat-icon
+            >
+          </div>
         </mat-expansion-panel-header>
+
         <div *ngIf="task.persons.length > 0">
           <div class="title-associated">Associated People:</div>
 
@@ -76,6 +87,7 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
+
     <div class="task-empty" *ngIf="filteredTasks.length === 0">
       Not found a task
     </div>

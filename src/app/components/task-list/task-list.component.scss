@@ -107,14 +107,17 @@
 }
 
 .mat-expansion-panel-header[aria-disabled="true"] {
-  color: #455963;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 .mat-expansion-panel-header.completed {
-  text-decoration: line-through;
-  color: #455963;
   background-color: #ff408152;
-  animation: strike-through 0.5s ease-in-out;
+  .mat-panel-title {
+    text-decoration: line-through;
+    color: rgba(0, 0, 0, 0.54);
+    animation: strike-through 0.5s ease-in-out;
+  }
+
 }
 
 mat-expansion-panel:hover .mat-expansion-panel-header.completed {
@@ -164,4 +167,18 @@ mat-expansion-panel:hover .mat-expansion-panel-header.completed.mat-expanded {
 
 .mat-list-item {
   padding: 0 8px;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  margin: 0px 10px;
+  gap: 5px;
+  color: rgba(0, 0, 0, 0.54);
+  text-decoration: none;
+}
+
+.delete-icon:hover,
+.edit-icon:hover {
+  color: rgba(0, 0, 0, 0.767);
 }

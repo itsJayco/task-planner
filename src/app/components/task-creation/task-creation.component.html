@@ -68,7 +68,10 @@
         </div>
 
         <div class="section slide">
-          <mat-slide-toggle (change)="toggleAddPerson()">
+          <mat-slide-toggle
+            [checked]="showAddPerson"
+            (change)="toggleAddPerson()"
+          >
             Relate person
           </mat-slide-toggle>
         </div>
@@ -153,12 +156,7 @@
       </div>
 
       <div mat-dialog-actions class="mat-datepicker-actions">
-        <button
-          mat-raised-button
-          (click)="onCloseDialog()"
-        >
-          Cancel
-        </button>
+        <button mat-raised-button (click)="onCloseDialog()">Cancel</button>
         <button
           mat-raised-button
           color="primary"

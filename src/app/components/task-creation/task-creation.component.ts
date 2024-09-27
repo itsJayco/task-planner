@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { Person, TaskService } from '../../services/task.service';
+import { Person, Task, TaskService } from '../../services/task.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MaterialModule } from 'src/app/material.module';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-task-creation',
@@ -13,7 +14,7 @@ import { MaterialModule } from 'src/app/material.module';
   standalone: true,
   imports: [MaterialModule, CommonModule, ReactiveFormsModule],
 })
-export class TaskCreationComponent implements OnInit{
+export class TaskCreationComponent implements OnInit {
   taskForm: FormGroup;
   personForm: FormGroup;
   showAddPerson: boolean = false;
@@ -34,7 +35,8 @@ export class TaskCreationComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
-    private dialogRef: MatDialogRef<TaskCreationComponent>
+    private dialogRef: MatDialogRef<TaskCreationComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Task
   ) {
     this.taskForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
@@ -50,6 +52,24 @@ export class TaskCreationComponent implements OnInit{
 
   ngOnInit(): void {
     this.getRandomPhrase();
+    if (this.data) {
+      this.taskForm.patchValue({
+        name: this.data.name,
+        deadline: this.data.deadline,
+      });
+
+      if (this.data.persons && this.data.persons.length > 0) {
+        this.addedPersons = [...this.data.persons];
+        this.showAddPerson = true;
+      } else {
+        this.addedPersons = [];
+        this.showAddPerson = false;
+      }
+
+      this.personForm.reset();
+      this.skills.clear();
+      this.addSkill();
+    }
   }
 
   getRandomPhrase(): void {
@@ -94,16 +114,23 @@ export class TaskCreationComponent implements OnInit{
       this.taskForm.valid &&
       (!this.showAddPerson || this.addedPersons.length > 0)
     ) {
-      const newTask = {
+      const newTask: Omit<Task, 'id'> = {
         name: this.taskForm.value.name,
         deadline: new Date(this.taskForm.value.deadline),
+        completed: this.data ? this.data.completed : false,
         persons: this.showAddPerson ? this.addedPersons : [],
       };
 
       const timezoneOffset = newTask.deadline.getTimezoneOffset() * 60 * 1000;
       newTask.deadline = new Date(newTask.deadline.getTime() + timezoneOffset);
 
-      this.taskService.addTask(newTask);
+      if (this.data) {
+        const updatedTask: Task = { ...newTask, id: this.data.id };
+        this.taskService.updateTask(updatedTask);
+      } else {
+        this.taskService.addTask(newTask);
+      }
+
       this.taskForm.reset();
       this.addedPersons = [];
       this.showAddPerson = false;
@@ -119,6 +146,9 @@ export class TaskCreationComponent implements OnInit{
     this.showAddPerson = !this.showAddPerson;
     if (!this.showAddPerson) {
       this.addedPersons = [];
+      this.personForm.reset();
+      this.skills.clear();
+      this.addSkill();
     }
   }
 
