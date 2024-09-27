@@ -3,8 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Task, TaskService } from 'src/app/services/task.service';
 import { TaskCreationComponent } from '../task-creation/task-creation.component';
 
-
-
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
@@ -20,12 +18,10 @@ export class TaskListComponent implements OnInit {
 
   ngOnInit(): void {
     this.taskService.getTasks().subscribe((tasks) => {
-      console.log(tasks)
       this.tasks = tasks;
       this.applyFilter();
     });
     this.currentDate = this.getCurrentDate();
-    this.openTaskCreationModal();
   }
 
   toggleTaskCompletion(event: any, id: number): void {
@@ -67,10 +63,17 @@ export class TaskListComponent implements OnInit {
   }
 
   openTaskCreationModal() {
-    this.dialog.open(TaskCreationComponent, {
+    const dialogRef = this.dialog.open(TaskCreationComponent, {
       width: '800px',
       height: '500px',
-      panelClass: 'custom-dialog'
+      panelClass: 'custom-dialog',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.taskService.getTasks().subscribe((tasks) => {
+        this.tasks = tasks;
+        this.applyFilter();
+      });
     });
   }
 }

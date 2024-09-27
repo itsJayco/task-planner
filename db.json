@@ -1,0 +1,20 @@
+{
+  "tasks": [
+    {
+      "id": "faa",
+      "name": "Default Task",
+      "deadline": "2024-12-31T00:00:00.000Z",
+      "completed": false,
+      "persons": [
+        {
+          "fullName": "John Doe",
+          "age": 30,
+          "skills": [
+            "JavaScript",
+            "Angular"
+          ]
+        }
+      ]
+    }
+  ]
+}

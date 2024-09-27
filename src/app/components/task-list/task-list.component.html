@@ -31,7 +31,7 @@
     <div class="task-form">
       <input
         class="task-input"
-        placeholder="Add a new task..."
+        placeholder="+ Add a new task..."
         (click)="openTaskCreationModal()"
       />
     </div>
@@ -39,6 +39,7 @@
   <mat-card-content class="mat-card-content">
     <mat-accordion>
       <mat-expansion-panel
+        class="mat-expansion-panel"
         *ngFor="let task of filteredTasks"
         [disabled]="!task.persons.length"
       >
@@ -55,15 +56,22 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div *ngIf="task.persons.length > 0">
-          Associated People:
-          <ul>
-            <li *ngFor="let person of task.persons">
-              {{ person.fullName }} ({{ person.age }})
-              <div *ngIf="person.skills.length > 0">
-                Skills: {{ person.skills.join(", ") }}
-              </div>
-            </li>
-          </ul>
+          <div class="title-associated">Associated People:</div>
+
+          <mat-list role="list">
+            <div *ngFor="let person of task.persons">
+              <mat-list-item class="mat-list-item" role="listitem">
+                <div class="person-name">
+                  {{ person.fullName }} ({{ person.age }})
+                </div>
+
+                <div class="person-skills" *ngIf="person.skills.length > 0">
+                  Skills: {{ person.skills.join(", ") }}
+                </div>
+              </mat-list-item>
+              <mat-divider *ngIf="task.persons.length > 1"></mat-divider>
+            </div>
+          </mat-list>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

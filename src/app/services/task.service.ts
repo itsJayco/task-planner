@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap } from 'rxjs/operators';
 
-// Interfaces para representar habilidades, personas y tareas
 export interface Skill {
   name: string;
 }
@@ -25,11 +26,7 @@ export interface Task {
 })
 export class TaskService {
   private tasks: Task[] = [];
-  private tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>(
-    []
-  );
-
-  constructor() {}
+  private tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
 
   getTasks(): Observable<Task[]> {
     return this.tasksSubject.asObservable();
@@ -65,6 +62,7 @@ export class TaskService {
       this.tasksSubject.next([...this.tasks]);
     }
   }
+
   private generateId(): number {
     return this.tasks.length > 0
       ? Math.max(...this.tasks.map((t) => t.id)) + 1

@@ -1,5 +1,5 @@
 .app {
-  max-width: 400px;
+  max-width: 90%;
   width: 100%;
   margin: auto;
   background-color: #fff;
@@ -9,6 +9,7 @@
   overflow: hidden;
   color: #455963;
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.3);
+  min-height: 90vh;
 }
 
 .header {
@@ -69,8 +70,20 @@
   cursor: pointer;
 }
 
+.task-input:hover {
+  &::placeholder {
+    color: rgb(51, 139, 147);
+  }
+}
+
 .task-input::placeholder {
-  color: #c8d0d4;
+  color: transparent;
+  background: radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-size: 15%;
+  animation: color 10s linear infinite;
+  font-weight: bold;
 }
 
 .mat-card-content {
@@ -105,6 +118,7 @@
 
 .mat-expansion-panel-header.completed {
   text-decoration: line-through;
+  color: #455963;
   animation: strike-through 0.5s ease-in-out;
 }
 
@@ -115,4 +129,25 @@
   100% {
     text-decoration: line-through;
   }
+}
+
+.title-associated {
+  color: #455963;
+  font-size: 14px;
+}
+
+.person-name {
+  color: #455963;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.person-skills {
+  color: #455963;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.mat-list-item {
+  padding: 0px 8px;
 }

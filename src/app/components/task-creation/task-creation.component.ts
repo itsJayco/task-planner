@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Person, TaskService } from '../../services/task.service';
 import { CommonModule } from '@angular/common';
@@ -13,11 +13,23 @@ import { MaterialModule } from 'src/app/material.module';
   standalone: true,
   imports: [MaterialModule, CommonModule, ReactiveFormsModule],
 })
-export class TaskCreationComponent {
+export class TaskCreationComponent implements OnInit{
   taskForm: FormGroup;
   personForm: FormGroup;
   showAddPerson: boolean = false;
   addedPersons: Person[] = [];
+  phrases: string[] = [
+    'ORGANIZE YOUR TASKS EFFICIENTLY',
+    'TURN YOUR IDEAS INTO ACTION',
+    'GET THINGS DONE FASTER',
+    'LET’S CREATE SOMETHING AMAZING',
+    'START YOUR TASK, ACHIEVE YOUR GOAL',
+    'EVERY TASK BRINGS YOU CLOSER TO SUCCESS',
+    'DEFINE YOUR NEXT STEP',
+    'PLAN. ACT. ACHIEVE.',
+  ];
+
+  selectedPhrase: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +46,15 @@ export class TaskCreationComponent {
       age: ['', []],
       skills: this.fb.array([this.fb.control('')]),
     });
+  }
+
+  ngOnInit(): void {
+    this.getRandomPhrase();
+  }
+
+  getRandomPhrase(): void {
+    const randomIndex = Math.floor(Math.random() * this.phrases.length);
+    this.selectedPhrase = this.phrases[randomIndex];
   }
 
   get skills() {
