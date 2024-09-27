@@ -69,7 +69,7 @@ export class TaskListComponent implements OnInit {
   openTaskCreationModal() {
     this.dialog.open(TaskCreationComponent, {
       width: '800px',
-      height: '400px',
+      height: '500px',
       panelClass: 'custom-dialog'
     });
   }

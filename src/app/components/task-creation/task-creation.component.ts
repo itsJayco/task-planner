@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormArray,
-  AbstractControl,
-} from '@angular/forms';
-import { TaskService } from '../../services/task.service';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Person, TaskService } from '../../services/task.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -21,7 +15,9 @@ import { MaterialModule } from 'src/app/material.module';
 })
 export class TaskCreationComponent {
   taskForm: FormGroup;
+  personForm: FormGroup;
   showAddPerson: boolean = false;
+  addedPersons: Person[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -31,47 +27,56 @@ export class TaskCreationComponent {
     this.taskForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
       deadline: ['', Validators.required],
-      persons: this.fb.array([]),
+    });
+
+    this.personForm = this.fb.group({
+      fullName: ['', []],
+      age: ['', []],
+      skills: this.fb.array([this.fb.control('')]),
     });
   }
 
-  get persons() {
-    return this.taskForm.get('persons') as FormArray;
+  get skills() {
+    return this.personForm.get('skills') as FormArray;
   }
 
-  getSkills(person: AbstractControl): FormArray {
-    return (person as FormGroup).get('skills') as FormArray;
+  addSkill() {
+    this.skills.push(this.fb.control(''));
+  }
+
+  removeSkill(index: number) {
+    this.skills.removeAt(index);
   }
 
   addPerson() {
-    const personForm = this.fb.group({
-      fullName: ['', [Validators.required, Validators.minLength(5)]],
-      age: ['', [Validators.required, Validators.min(18)]],
-      skills: this.fb.array([this.fb.control('', Validators.required)]),
-    });
-    this.persons.push(personForm);
+    if (this.personForm.valid) {
+      const newPerson: Person = {
+        fullName: this.personForm.value.fullName,
+        age: this.personForm.value.age,
+        skills: this.personForm.value.skills.filter(
+          (skill: string) => skill.trim() !== ''
+        ),
+      };
+      this.addedPersons.push(newPerson);
+      this.personForm.reset();
+      this.skills.clear();
+      this.addSkill();
+    }
   }
 
   removePerson(index: number) {
-    this.persons.removeAt(index);
-  }
-
-  addSkill(personIndex: number) {
-    const skills = this.getSkills(this.persons.at(personIndex));
-    skills.push(this.fb.control('', Validators.required));
-  }
-
-  removeSkill(personIndex: number, skillIndex: number) {
-    const skills = this.getSkills(this.persons.at(personIndex));
-    skills.removeAt(skillIndex);
+    this.addedPersons.splice(index, 1);
   }
 
   onSubmit() {
-    if (this.taskForm.valid) {
+    if (
+      this.taskForm.valid &&
+      (!this.showAddPerson || this.addedPersons.length > 0)
+    ) {
       const newTask = {
         name: this.taskForm.value.name,
         deadline: new Date(this.taskForm.value.deadline),
-        persons: this.taskForm.value.persons,
+        persons: this.showAddPerson ? this.addedPersons : [],
       };
 
       const timezoneOffset = newTask.deadline.getTimezoneOffset() * 60 * 1000;
@@ -79,7 +84,8 @@ export class TaskCreationComponent {
 
       this.taskService.addTask(newTask);
       this.taskForm.reset();
-
+      this.addedPersons = [];
+      this.showAddPerson = false;
       this.onCloseDialog();
     }
   }
@@ -89,6 +95,17 @@ export class TaskCreationComponent {
   }
 
   toggleAddPerson() {
-    this.showAddPerson = !this.showAddPerson
+    this.showAddPerson = !this.showAddPerson;
+    if (!this.showAddPerson) {
+      this.addedPersons = [];
+    }
+  }
+
+  isAddPersonDisabled(): boolean {
+    return (
+      this.personForm.invalid ||
+      this.skills.length === 0 ||
+      this.skills.controls.every((control) => !control.value)
+    );
   }
 }
