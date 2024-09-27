@@ -121,8 +121,16 @@ export class TaskCreationComponent implements OnInit {
         persons: this.showAddPerson ? this.addedPersons : [],
       };
 
-      const timezoneOffset = newTask.deadline.getTimezoneOffset() * 60 * 1000;
-      newTask.deadline = new Date(newTask.deadline.getTime() + timezoneOffset);
+      if (
+        !this.data ||
+        (this.data &&
+          new Date(this.data.deadline).getTime() !== newTask.deadline.getTime())
+      ) {
+        const timezoneOffset = newTask.deadline.getTimezoneOffset() * 60 * 1000;
+        newTask.deadline = new Date(
+          newTask.deadline.getTime() + timezoneOffset
+        );
+      }
 
       if (this.data) {
         const updatedTask: Task = { ...newTask, id: this.data.id };
