@@ -1,3 +1,4 @@
+/* Main App Styles */
 .app {
   max-width: 90%;
   width: 100%;
@@ -12,17 +13,18 @@
   min-height: 90vh;
 }
 
+/* Header Styles */
 .header {
   display: flex;
   flex-direction: column;
-  padding: 0px;
+  padding: 0;
 }
 
 .task-header-title {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  padding: 20px 20px 6px 20px;
+  padding: 20px;
 }
 
 .task-tools {
@@ -33,6 +35,7 @@
   padding: 0 20px;
 }
 
+/* Task Count & Filter Styles */
 .task-count {
   color: #8a9ca5;
   font-size: 14px;
@@ -41,7 +44,7 @@
 .task-filter {
   border: 0;
   padding: 4px 8px;
-  background: 0;
+  background: transparent;
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
@@ -55,6 +58,7 @@
   color: #fff;
 }
 
+/* Task Input Form Styles */
 .task-form {
   display: flex;
   margin-top: 10px;
@@ -70,15 +74,17 @@
   cursor: pointer;
 }
 
-.task-input:hover {
-  &::placeholder {
-    color: rgb(51, 139, 147);
-  }
+.task-input:hover::placeholder {
+  color: rgb(51, 139, 147);
 }
 
 .task-input::placeholder {
   color: transparent;
-  background: radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%);
+  background: radial-gradient(
+    circle at -1% 57.5%,
+    rgb(19, 170, 82) 0%,
+    rgb(0, 102, 43) 90%
+  );
   background-clip: text;
   -webkit-background-clip: text;
   background-size: 15%;
@@ -86,6 +92,7 @@
   font-weight: bold;
 }
 
+/* Card & Expansion Panel Styles */
 .mat-card-content {
   padding: 16px;
 }
@@ -95,14 +102,44 @@
   padding-left: 1px;
 }
 
-.mat-expansion-panel-header.completed {
-  background-color: #ff408152;
+.mat-expansion-panel-header.completed:hover {
+  background-color: #ff106052;
 }
 
 .mat-expansion-panel-header[aria-disabled="true"] {
-  color: initial;
+  color: #455963;
 }
 
+.mat-expansion-panel-header.completed {
+  text-decoration: line-through;
+  color: #455963;
+  background-color: #ff408152;
+  animation: strike-through 0.5s ease-in-out;
+}
+
+mat-expansion-panel:hover .mat-expansion-panel-header.completed {
+  background-color: #ff106052;
+}
+
+mat-expansion-panel:hover .mat-expansion-panel-header.completed.mat-expanded {
+  background-color: white;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+  background-color: white;
+}
+
+/* Keyframes for Animations */
+@keyframes strike-through {
+  0% {
+    text-decoration: none;
+  }
+  100% {
+    text-decoration: line-through;
+  }
+}
+
+/* Empty State Styles */
 .task-empty {
   height: 120px;
   display: flex;
@@ -116,32 +153,9 @@
   background-size: 80px;
 }
 
-.mat-expansion-panel-header.completed {
-  text-decoration: line-through;
-  color: #455963;
-  animation: strike-through 0.5s ease-in-out;
-}
-
-@keyframes strike-through {
-  0% {
-    text-decoration: none;
-  }
-  100% {
-    text-decoration: line-through;
-  }
-}
-
-.title-associated {
-  color: #455963;
-  font-size: 14px;
-}
-
-.person-name {
-  color: #455963;
-  font-size: 14px;
-  text-transform: capitalize;
-}
-
+/* Typography Styles */
+.title-associated,
+.person-name,
 .person-skills {
   color: #455963;
   font-size: 14px;
@@ -149,5 +163,5 @@
 }
 
 .mat-list-item {
-  padding: 0px 8px;
+  padding: 0 8px;
 }

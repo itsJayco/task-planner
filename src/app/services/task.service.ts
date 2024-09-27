@@ -25,47 +25,67 @@ export interface Task {
   providedIn: 'root',
 })
 export class TaskService {
-  private tasks: Task[] = [];
-  private tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>([]);
+  private tasksSubject: BehaviorSubject<Task[]> = new BehaviorSubject<Task[]>(
+    []
+  );
+
+  constructor(private http: HttpClient) {
+    this.loadTasks();
+  }
 
   getTasks(): Observable<Task[]> {
     return this.tasksSubject.asObservable();
   }
 
+  private loadTasks(): void {
+    this.http
+      .get<Task[]>('http://localhost:3000/tasks')
+      .pipe(
+        tap((tasks) => this.tasksSubject.next(tasks)),
+        catchError((error) => {
+          console.error('Error loading tasks from API', error);
+          return [];
+        })
+      )
+      .subscribe();
+  }
+
   addTask(task: Omit<Task, 'id' | 'completed'>): void {
-    const newTask: Task = {
-      ...task,
-      id: this.generateId(),
-      completed: false,
-    };
-    this.tasks.push(newTask);
-    this.tasksSubject.next([...this.tasks]);
+    const newTask = { ...task, completed: false } as Task;
+    this.http
+      .post<Task>('http://localhost:3000/tasks', newTask)
+      .subscribe((createdTask) => {
+        this.tasksSubject.next([...this.tasksSubject.value, createdTask]);
+      });
   }
 
   updateTask(updatedTask: Task): void {
-    const index = this.tasks.findIndex((task) => task.id === updatedTask.id);
-    if (index !== -1) {
-      this.tasks[index] = updatedTask;
-      this.tasksSubject.next([...this.tasks]);
-    }
+    this.http
+      .put<Task>(`http://localhost:3000/tasks/${updatedTask.id}`, updatedTask)
+      .subscribe(() => {
+        const index = this.tasksSubject.value.findIndex(
+          (task) => task.id === updatedTask.id
+        );
+        if (index !== -1) {
+          this.tasksSubject.value[index] = updatedTask;
+          this.tasksSubject.next([...this.tasksSubject.value]);
+        }
+      });
   }
 
   deleteTask(id: number): void {
-    this.tasks = this.tasks.filter((task) => task.id !== id);
-    this.tasksSubject.next([...this.tasks]);
+    this.http.delete(`http://localhost:3000/tasks/${id}`).subscribe(() => {
+      this.tasksSubject.next(
+        this.tasksSubject.value.filter((task) => task.id !== id)
+      );
+    });
   }
 
   toggleTaskCompletion(id: number): void {
-    const task = this.tasks.find((t) => t.id === id);
+    const task = this.tasksSubject.value.find((t) => t.id === id);
     if (task) {
-      task.completed = !task.completed;
-      this.tasksSubject.next([...this.tasks]);
+      const updatedTask = { ...task, completed: !task.completed };
+      this.updateTask(updatedTask);
     }
-  }
-
-  private generateId(): number {
-    return this.tasks.length > 0
-      ? Math.max(...this.tasks.map((t) => t.id)) + 1
-      : 1;
   }
 }

@@ -57,9 +57,12 @@ export class TaskListComponent implements OnInit {
       .replace(/,/g, '');
   }
 
-  deleteTask(id: number) {
-    this.taskService.deleteTask(id);
-    this.applyFilter();
+  deleteTask(taskId: number | undefined): void {
+    if (taskId !== undefined) {
+      this.taskService.deleteTask(taskId);
+    } else {
+      console.error('Task ID is undefined');
+    }
   }
 
   openTaskCreationModal() {

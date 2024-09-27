@@ -50,6 +50,7 @@
           <mat-panel-title>
             <mat-checkbox
               [checked]="task.completed"
+              *ngIf="task.id"
               (click)="toggleTaskCompletion($event, task.id)"
             ></mat-checkbox>
             {{ task.name }} - {{ task.deadline | date }}
